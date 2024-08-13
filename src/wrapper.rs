@@ -20,7 +20,6 @@ pub struct InitializeOptions {
 impl Default for InitializeOptions {
     fn default() -> Self {
         let default_options = unsafe { voicevox_make_default_initialize_options() };
-        println!("open_jtalk_dict_dir: {:?}", default_options.open_jtalk_dict_dir);
         Self {
             acceleration_mode: match default_options.acceleration_mode {
                 0 => AccelerationMode::Auto,
