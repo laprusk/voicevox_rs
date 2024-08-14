@@ -252,4 +252,30 @@ mod tests {
         let result = core.tts("こんにちは", 1);
         assert!(result.is_ok());
     }
+
+    #[test]
+    fn test_get_version() {
+        let version = VoicevoxCore::get_version();
+        println!("{}", version);
+        assert!(version.len() > 0);
+    }
+
+    #[test]
+    fn test_is_gpu_mode() {
+        let is_gpu_mode = VoicevoxCore::is_gpu_mode();
+        println!("{}", is_gpu_mode);
+        assert!(is_gpu_mode == false);
+    }
+
+    #[test]
+    fn test_is_model_loaded() {
+        let core = VoicevoxCore::new(InitializeOptions {
+            open_jtalk_dict_dir: "./voicevox_core/open_jtalk_dic_utf_8-1.11".to_string(),
+            ..Default::default()
+        }).unwrap();
+        core.load_model(1).unwrap();
+        let is_model_loaded = core.is_model_loaded(1);
+        println!("{}", is_model_loaded);
+        assert!(is_model_loaded == true);
+    }
 }
