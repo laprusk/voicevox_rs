@@ -1,4 +1,4 @@
-use voicevox_rs::{VoicevoxCore, InitializeOptions};
+use vvcapi::{VoicevoxCore, InitializeOptions};
 use std::io::Write;
 
 fn main() {
