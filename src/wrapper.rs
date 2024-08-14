@@ -89,6 +89,11 @@ impl VoicevoxCore {
         }
     }
 
+    pub fn get_version() -> String {
+        let version = unsafe { voicevox_get_version() };
+        unsafe { std::ffi::CStr::from_ptr(version).to_str().unwrap().to_string() }
+    }
+
     pub fn load_model(&self, speaker_id: u32) -> Result<(), VoicevoxResultCode> {
         let result = unsafe { voicevox_load_model(speaker_id) };
 
@@ -96,6 +101,14 @@ impl VoicevoxCore {
             0 => Ok(()),
             _ => Err(result),
         }
+    }
+
+    pub fn is_gpu_mode() -> bool {
+        unsafe { voicevox_is_gpu_mode() }
+    }
+
+    pub fn is_model_loaded(&self, speaker_id: u32) -> bool {
+        unsafe { voicevox_is_model_loaded(speaker_id) }
     }
 
     pub fn audio_query(
