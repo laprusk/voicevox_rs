@@ -89,7 +89,7 @@ impl VoicevoxCore {
         }
     }
 
-    pub fn get_version() -> String {
+    pub fn get_version(&self) -> String {
         let version = unsafe { voicevox_get_version() };
         unsafe { std::ffi::CStr::from_ptr(version).to_str().unwrap().to_string() }
     }
@@ -103,7 +103,7 @@ impl VoicevoxCore {
         }
     }
 
-    pub fn is_gpu_mode() -> bool {
+    pub fn is_gpu_mode(&self) -> bool {
         unsafe { voicevox_is_gpu_mode() }
     }
 
@@ -255,14 +255,22 @@ mod tests {
 
     #[test]
     fn test_get_version() {
-        let version = VoicevoxCore::get_version();
+        let core = VoicevoxCore::new(InitializeOptions {
+            open_jtalk_dict_dir: "./voicevox_core/open_jtalk_dic_utf_8-1.11".to_string(),
+            ..Default::default()
+        }).unwrap();
+        let version = core.get_version();
         println!("{}", version);
         assert!(version.len() > 0);
     }
 
     #[test]
     fn test_is_gpu_mode() {
-        let is_gpu_mode = VoicevoxCore::is_gpu_mode();
+        let core = VoicevoxCore::new(InitializeOptions {
+            open_jtalk_dict_dir: "./voicevox_core/open_jtalk_dic_utf_8-1.11".to_string(),
+            ..Default::default()
+        }).unwrap();
+        let is_gpu_mode = core.is_gpu_mode();
         println!("{}", is_gpu_mode);
         assert!(is_gpu_mode == false);
     }
