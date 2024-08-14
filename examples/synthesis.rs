@@ -7,7 +7,7 @@ fn main() {
         open_jtalk_dict_dir,
         ..Default::default()
     }).unwrap();
-    let text = "永遠と呼ぶことができたなら";
+    let text = "永遠と、呼ぶことが、できたなら";
     let speaker_id = 1;
 
     core.load_model(speaker_id).unwrap();

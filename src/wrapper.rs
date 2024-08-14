@@ -48,7 +48,7 @@ pub struct Mora {
 pub struct AccentPhrase {
     pub moras: Vec<Mora>,
     pub accent: i32,
-    pub pause_mora: Option<Vec<Mora>>,
+    pub pause_mora: Option<Mora>,
     pub is_interrogative: bool,
 }
 
@@ -122,13 +122,19 @@ impl VoicevoxCore {
         let result = unsafe {
             voicevox_audio_query(cstr.as_ptr(), speaker_id, options, &mut output)
         };
-        // println!("json: {}", unsafe { std::ffi::CStr::from_ptr(output).to_str().unwrap() });
 
         match result {
             0 => {
                 let output_str = unsafe { std::ffi::CStr::from_ptr(output) };
-                let audio_query: AudioQuery = serde_json::from_str(output_str.to_str().unwrap()).unwrap();
-                Ok(audio_query)
+                let output_str = output_str.to_str().unwrap();
+                match serde_json::from_str::<AudioQuery>(output_str) {
+                    Ok(audio_query) => Ok(audio_query),
+                    Err(e) => {
+                        eprintln!("Failed to parse JSON: {}", e);
+                        eprintln!("JSON data: {}", output_str);
+                        Err(VoicevoxResultCode::from(1))
+                    }
+                }
             },
             _ => Err(result),
         }
@@ -139,7 +145,13 @@ impl VoicevoxCore {
         audio_query: AudioQuery,
         speaker_id: u32
     ) -> Result<Vec<u8>, VoicevoxResultCode> {
-        let audio_query_json = serde_json::to_string(&audio_query).unwrap();
+        let audio_query_json = match serde_json::to_string(&audio_query) {
+            Ok(json) => json,
+            Err(e) => {
+                eprintln!("Failed to serialize AudioQuery: {}", e);
+                return Err(VoicevoxResultCode::from(1));
+            }
+        };
         let audio_query_json = CString::new(audio_query_json).unwrap();
         let options = unsafe { voicevox_make_default_synthesis_options() };
         let mut output_wav_length: usize = 0;
