@@ -40,8 +40,8 @@ pub struct Mora {
     pub consonant: Option<String>,
     pub consonant_length: Option<f32>,
     pub vowel: String,
-    pub vowel_length: f32,
-    pub pitch: f32,
+    pub vowel_length: f64,
+    pub pitch: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -55,12 +55,12 @@ pub struct AccentPhrase {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AudioQuery {
     pub accent_phrases: Vec<AccentPhrase>,
-    pub speed_scale: f32,
-    pub pitch_scale: f32,
-    pub intonation_scale: f32,
-    pub volume_scale: f32,
-    pub pre_phoneme_length: f32,
-    pub post_phoneme_length: f32,
+    pub speed_scale: f64,
+    pub pitch_scale: f64,
+    pub intonation_scale: f64,
+    pub volume_scale: f64,
+    pub pre_phoneme_length: f64,
+    pub post_phoneme_length: f64,
     pub output_sampling_rate: i32,
     pub output_stereo: bool,
     pub kana: String,
